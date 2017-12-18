@@ -22,11 +22,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
-        <module name="bpm-addons" />
+        <module name="seal" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="bpm-addons" target="1.5" />
+      <module name="seal" target="1.5" />
     </bytecodeTargetLevel>
   </component>
 </project>
