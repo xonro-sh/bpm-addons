@@ -27,6 +27,7 @@ public class SealReturnAExeListener extends ExecuteListener {
         String boName= (String) cont.getVariable("boName");
         // 根据bindId判断当前流程是否正常结束
         String CONTROLSTATE = FlagUtil.getControlState(bindId);
+        
         if (CONTROLSTATE.equals("end")) {
             // 获取印章编号
             String sealNo = DBSql
