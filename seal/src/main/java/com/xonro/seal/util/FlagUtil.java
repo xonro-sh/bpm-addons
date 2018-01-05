@@ -36,6 +36,7 @@ public class FlagUtil {
         if(null!=bindId && !"".equals(bindId)){
             String sql="SELECT CONTROLSTATE FROM WFC_PROCESS WHERE ID='"+bindId+"'";
             return  DBSql.getString(sql);
+            
         }
         return null;
     }
