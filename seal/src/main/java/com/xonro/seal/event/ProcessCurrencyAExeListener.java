@@ -23,6 +23,7 @@ public class ProcessCurrencyAExeListener extends ExecuteListener {
         String boName= (String) cont.getVariable("boName");
         // 根据bindId判断当前流程是否正常结束
         String CONTROLSTATE = FlagUtil.getControlState(bindId);
+        
         if(CONTROLSTATE.equals("end")){
             //更改流程状态为1(正常结束)
             FlagUtil.updateSealFlag(boName,bindId,1);
