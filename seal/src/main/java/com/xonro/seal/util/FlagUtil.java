@@ -9,7 +9,7 @@ import com.actionsoft.bpms.util.DBSql;
  */
 public class FlagUtil {
     /**
-     * 根据传过来的参数，修对应流程状态
+     * 根据传过来的参数，修改对应流程状态
      * @param boName
      * @param bindId
      * @param flag
@@ -36,8 +36,20 @@ public class FlagUtil {
         if(null!=bindId && !"".equals(bindId)){
             String sql="SELECT CONTROLSTATE FROM WFC_PROCESS WHERE ID='"+bindId+"'";
             return  DBSql.getString(sql);
-            
+
         }
         return null;
+    }
+
+    /**
+     * 根据印章编号修改印章外借流程中，是否归还字段状态
+     * @param sealNo
+     */
+    public static void updateReturnFalg(String sealNo){
+        if(null!=sealNo && !"".equals(sealNo)){
+            String sql="UPDATE BO_XR_SM_BORROW SET IFRETURN=1 WHERE SEAL_NO='"+sealNo+"'";
+            DBSql.update(sql);
+        }
+
     }
 }

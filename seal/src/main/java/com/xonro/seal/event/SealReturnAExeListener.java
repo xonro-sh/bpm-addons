@@ -7,7 +7,8 @@ import com.xonro.seal.util.FlagUtil;
 import com.xonro.seal.util.SealUtil;
 
 /**
- * 印章归还流程结束后，将对应印章的状态改为0(正常状态)
+ * 印章归还流程结束后，将对应印章的状态改为0(正常状态)，
+ * 修改印章外借流程中对应印章编号的归还状态为1(已归还)
  *
  * @author hjj
  * @date 2018/1/2
@@ -35,6 +36,8 @@ public class SealReturnAExeListener extends ExecuteListener {
                             + bindId + "'");
             // 根据印章编号修改印章状态为0(正常状态)
             SealUtil.updateSealFlag(sealNo, 0);
+            //根据印章编号修改对应印章外借流程是否归还字段为1(已归还)
+            FlagUtil.updateReturnFalg(sealNo);
             //更改流程状态为1(正常结束)
             FlagUtil.updateSealFlag(boName,bindId,1);
         }else{
