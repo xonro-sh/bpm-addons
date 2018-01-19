@@ -23,46 +23,12 @@ public class BoDataUtil {
         if(deptList!=null && deptList.size()>0 && deptSonList!=null && deptSonList.size()>0){
             for(int i=0;i<deptSonList.size();i++){
                 BO boData=new BO();
-                //申请日期
-                boData.set("APPLYDATE",deptList.get(0).get("APPLYDATE"));
-                //申请单号
-                boData.set("APPLYNO",deptList.get(0).get("APPLYNO"));
-                //申请人账户
-                boData.set("USERID",deptList.get(0).get("USERID"));
-                //申请人
-                boData.set("USERNAME",deptList.get(0).get("USERNAME"));
-                //部门名称
-                boData.set("DEPARTMENTNAME",deptList.get(0).get("DEPARTMENTNAME"));
-                //部门ID
-                boData.set("DEPARTMENTID",deptList.get(0).get("DEPARTMENTID"));
-                //部门全路径
-                boData.set("DEPARTMENTPATH",deptList.get(0).get("DEPARTMENTPATH"));
-                //职等
-                boData.set("POSITIONNO",deptList.get(0).get("POSITIONNO"));
-                //岗位
-                boData.set("POSITIONNAME",deptList.get(0).get("POSITIONNAME"));
-                //公司名称
-                boData.set("COMPANYNAME",deptList.get(0).get("COMPANYNAME"));
-                //公司ID
-                boData.set("COMPANYID",deptList.get(0).get("COMPANYID"));
-                //月份
-                boData.set("MONTH",deptList.get(0).get("MONTH"));
                 //年份
                 boData.set("YEAR",deptList.get(0).get("YEAR"));
-                //备注
-                boData.set("REMARK",deptList.get(0).get("REMARK"));
-                //原因
-                boData.set("REASON",deptList.get(0).get("REASON"));
-                //附件
-                boData.set("ATTACHMENT",deptList.get(0).get("ATTACHMENT"));
                 //预算部门
                 boData.set("BUDGET_DEPT",deptList.get(0).get("BUDGET_DEPT"));
                 //预算部门ID
                 boData.set("BUDGET_DEPTID",deptList.get(0).get("BUDGET_DEPTID"));
-                //流程状态
-                boData.set("XORONFLAG",deptList.get(0).get("XORONFLAG"));
-                //预算金额
-                boData.set("BUDGETSUM",deptList.get(0).get("BUDGETSUM"));
                 //一级科目编号
                 boData.set("FIR_NO",deptSonList.get(i).get("FIR_NO"));
                 //一级科目名称
@@ -107,25 +73,57 @@ public class BoDataUtil {
         return  boList;
     }
 
-    /**
-     * 提去中间表中对应主表数据
-     * @param deptId
-     * @param year
-     * @return
-     */
-    public static BO getMasterData(String deptId,String year){
-        //根据预算部门Id和年份获取对应中间数据
-        List<BO> boList=getBoList(deptId,year);
-        //提取主表数据
-        BO data=new BO();
-        if(boList!=null && boList.size()>0){
-            //附件
-            data.set("ATTACHMENT",boList.get(0).get("ATTACHMENT"));
-            //备注
-            data.set("REMARK",boList.get(0).get("REMARK"));
-        }
-        return  data;
-    }
+//    /**
+//     * 提去中间表中对应主表数据
+//     * @param deptId
+//     * @param year
+//     * @return
+//     */
+//    public static BO getMasterData(String deptId, String year, UserContext me){
+//        //根据预算部门Id和年份获取对应中间数据
+//        List<BO> boList=getBoList(deptId,year,"");
+//        //提取主表数据
+//        BO data=new BO();
+//        if(boList!=null && boList.size()>0){
+//            //申请日期
+//            data.set("APPLYDATE",SDK.getRuleAPI().executeAtScript("@date"));
+//            //申请单号
+//            data.set("APPLYNO",SDK.getRuleAPI().executeAtScript("BUDGETCHANGE-@year@month@dayOfMonth@sequence(BO_XR_FM_DEPT_BUDGET_CHANGE,3,0)"));
+//            //申请人账户
+//            data.set("USERID",me.getUID());
+//            //申请人
+//            data.set("USERNAME",me.getUserName());
+//            //部门名称
+//            data.set("DEPARTMENTNAME",me.getDepartmentModel().getName());
+//            //部门ID
+//            data.set("DEPARTMENTID",me.getDepartmentModel().getId());
+//            //部门全路径
+//            data.set("DEPARTMENTPATH",me.getDepartmentModel().getPathNameOfCache());
+//            //职等
+//            data.set("POSITIONNO",me.getUserModel().getPositionLayer());
+//            //岗位
+//            data.set("POSITIONNAME",me.getUserModel().getPositionName());
+//            //公司名称
+//            data.set("COMPANYNAME",me.getCompanyModel().getName());
+//            //公司ID
+//            data.set("COMPANYID",me.getCompanyModel().getId());
+//            //月份
+//            data.set("MONTH",SDK.getRuleAPI().executeAtScript("@month(@date)"));
+//            //年份
+//            data.set("YEAR",boList.get(0).get("YEAR"));
+//            //预算部门
+//            data.set("BUDGET_DEPT",boList.get(0).get("BUDGET_DEPT"));
+//            //预算部门ID
+//            data.set("BUDGET_DEPTID",boList.get(0).get("BUDGET_DEPTID"));
+//            //预算金额
+//            data.set("BUDGETSUM",boList.get(0).get("BUDGETSUM"));
+//            //附件
+//            data.set("ATTACHMENT",boList.get(0).get("ATTACHMENT"));
+//            //备注
+//            data.set("REMARK",boList.get(0).get("REMARK"));
+//        }
+//        return  data;
+//    }
 
     /**
      * 提取中间表对应子表数据
@@ -133,9 +131,9 @@ public class BoDataUtil {
      * @param year
      * @return
      */
-    public static List<BO> getSonData(String deptId,String year){
+    public static List<BO> getSonData(String deptId,String year,String secNo){
         //根据预算部门Id和年份获取对应中间数据
-        List<BO> boList=getBoList(deptId,year);
+        List<BO> boList=getBoList(deptId,year,secNo);
         //提取子表数据
         List<BO> sonList=new ArrayList<BO>();
         if(boList!=null && boList.size()>0){
@@ -193,7 +191,10 @@ public class BoDataUtil {
      * @param year
      * @return
      */
-    private static List<BO> getBoList(String deptId,String year){
-        return SDK.getBOAPI().query("BO_XR_DEPT_MIDDLE").addQuery("BUDGET_DEPTID=",deptId).addQuery("YEAR=",year).list();
+    private static List<BO> getBoList(String deptId,String year,String secNo){
+        if(!"".equals(secNo) && null!=secNo){
+            return SDK.getBOAPI().query("BO_XR_FM_BUDGET_DATA").addQuery("BUDGET_DEPTID=",deptId).addQuery("YEAR=",year).addQuery("SEC_NO=",secNo).list();
+        }
+        return SDK.getBOAPI().query("BO_XR_FM_BUDGET_DATA").addQuery("BUDGET_DEPTID=",deptId).addQuery("YEAR=",year).list();
     }
 }
