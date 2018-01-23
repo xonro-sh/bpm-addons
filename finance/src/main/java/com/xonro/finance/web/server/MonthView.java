@@ -4,34 +4,47 @@ import com.actionsoft.bpms.commons.database.RowMap;
 import com.actionsoft.bpms.commons.echarts.EChartsOptionBuilder;
 import com.actionsoft.bpms.commons.echarts.EChartsSeries;
 import com.actionsoft.bpms.commons.mvc.view.ResponseObject;
-import com.actionsoft.bpms.server.UserContext;
 import com.actionsoft.bpms.util.DBSql;
+import com.xonro.finance.util.MonthUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 /**
- * Created by henry on 2018-1-22.
+ * 点击月份，显示对应图形报表
+ * @author hjj
+ * @date  2018-1-23
  */
-public class CompanyBudgetView {
-    public String getCompanyBudgetView(UserContext me,String year){
+public class MonthView {
+    public String getMonthView(String month,String year,String deptId){
         ResponseObject ro = ResponseObject.newOkResponse();
         EChartsOptionBuilder edChartBuilder = new EChartsOptionBuilder();
-        edChartBuilder.options().title("show", Boolean.valueOf(true)).title("text", "数据汇总图形报表").title("subtext","纯属虚构");
+        edChartBuilder.options().title("show", Boolean.valueOf(true)).title("text", month+"汇总图形报表").title("subtext","纯属虚构");
         edChartBuilder.options().tooltip("trigger","axis");
         edChartBuilder.options().legend("data",new String[]{"预算金额","报销金额"});
         edChartBuilder.options().xAxis("type","category");
-        String sql="SELECT SEC_NAME,sum(TOTAL) as TOTAL,SUM(TOTAL_ACTUAL) as " +
-                "TOTAL_ACTUAL FROM BO_XR_FM_BUDGET_DATA WHERE YEAR='2018' group by SEC_NAME";
-        List<RowMap> dataList= DBSql.getMaps(sql,new HashMap<String, Object>());
+        StringBuffer strSql=new StringBuffer();
+        strSql.append("SELECT SUM("+ MonthUtil.getBudgetLable(month)+") AS "+MonthUtil.getBudgetLable(month)+",");
+        strSql.append("SUM("+MonthUtil.getActualLable(month)+") AS "+MonthUtil.getActualLable(month)+",");
+        strSql.append("SEC_NAME FROM BO_XR_FM_BUDGET_DATA WHERE 1=1 ");
+        //判断用户是否选择年份
+        if(null!=year && !"".equals(year)){
+            strSql.append(" AND YEAR='"+year+"'");
+        }
+        //判断用户是否选择部门
+        if(null!=deptId && !"".equals(deptId)){
+            strSql.append(" AND BUDGET_DEPTID='"+deptId+"'");
+        }
+        strSql.append(" GROUP BY  SEC_NAME");
+        List<RowMap> dataList= DBSql.getMaps(strSql.toString(),new HashMap<String, Object>());
         List<String> xData=new ArrayList<>();
         List<Double> bugetData=new ArrayList<>();
         List<Double> actualData=new ArrayList<>();
         if(dataList!=null && dataList.size()>0){
             for(int i=0;i<dataList.size();i++){
-                bugetData.add(dataList.get(i).getDouble("TOTAL"));
-                actualData.add(dataList.get(i).getDouble("TOTAL_ACTUAL"));
+                bugetData.add(dataList.get(i).getDouble(MonthUtil.getBudgetLable(month)));
+                actualData.add(dataList.get(i).getDouble(MonthUtil.getActualLable(month)));
                 xData.add(dataList.get(i).getString("SEC_NAME"));
             }
         }
@@ -48,5 +61,4 @@ public class CompanyBudgetView {
 
         return  ro.toString();
     }
-
 }

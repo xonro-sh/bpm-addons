@@ -6,6 +6,8 @@ import com.actionsoft.bpms.server.bind.annotation.Mapping;
 import com.actionsoft.bpms.util.DBSql;
 import com.xonro.finance.web.server.CompanyBudgetView;
 import com.xonro.finance.web.server.GetDeptBudgetInfo;
+import com.xonro.finance.web.server.MonthView;
+import com.xonro.finance.web.server.SubjectView;
 
 /**
  * 财务管理系统控制器
@@ -44,8 +46,34 @@ public class WebController {
     @Mapping("com.xonro.apps.finance_getCompanyBudgetView")
      public String getCompanyBudgetView(UserContext me,String year){
         CompanyBudgetView tv=new CompanyBudgetView();
-        return  tv.getCompanyBudgetView(me,year); 
+        return  tv.getCompanyBudgetView(me,year);
      }
+
+    /**
+     * 点击科目名称，显示对应图形报表
+     * @param secNo  二级科目编号
+     * @param year   年份
+     * @param deptId 部门编号
+     * @return
+     */
+    @Mapping("com.xonro.apps.finance_getSubjectView")
+    public String getSubjectView(String secNo,String year,String deptId){
+        SubjectView sv=new SubjectView();
+        return  sv.getSubjectView(secNo,year,deptId);
+    }
+
+    /**
+     * 点击月份，显示对应图形报表
+     * @param month   月份
+     * @param year    年份
+     * @param deptId  部门Id
+     * @return
+     */
+    @Mapping("com.xonro.apps.finance_getMonthView")
+    public String getMonthView(String month,String year,String deptId){
+        MonthView mv=new MonthView();
+        return mv.getMonthView(month,year,deptId);
+    }
 
 
 }
