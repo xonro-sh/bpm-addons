@@ -4,8 +4,8 @@ import com.actionsoft.bpms.server.UserContext;
 import com.actionsoft.bpms.server.bind.annotation.Controller;
 import com.actionsoft.bpms.server.bind.annotation.Mapping;
 import com.actionsoft.bpms.util.DBSql;
-import com.xonro.finance.web.server.GetDeptBudgetInfo;
 import com.xonro.finance.web.server.CompanyBudgetView;
+import com.xonro.finance.web.server.GetDeptBudgetInfo;
 
 /**
  * 财务管理系统控制器
@@ -44,7 +44,7 @@ public class WebController {
     @Mapping("com.xonro.apps.finance_getCompanyBudgetView")
      public String getCompanyBudgetView(UserContext me,String year){
         CompanyBudgetView tv=new CompanyBudgetView();
-        return tv.getCompanyBudgetView(me,year);
+        return  tv.getCompanyBudgetView(me,year); 
      }
 
 
