@@ -5,6 +5,7 @@ import com.actionsoft.bpms.bpmn.engine.core.delegate.ProcessExecutionContext;
 import com.actionsoft.bpms.bpmn.engine.listener.ExecuteListener;
 import com.actionsoft.bpms.util.DBSql;
 import com.actionsoft.sdk.local.SDK;
+import com.xonro.finance.dao.BudgetDataDao;
 import com.xonro.finance.util.FlagUtil;
 
 import java.util.ArrayList;
@@ -67,9 +68,8 @@ public class DeptChangeAExeListener extends ExecuteListener {
                 if(deletesecNos!=null && deletesecNos.size()>0){
                     for(int i=0;i<deletesecNos.size();i++){
                         //根据年份和预算部门Id,以及二级科目编号删除汇总中间表中对应数据
-                        String deleteSql="DELETE FROM BO_XR_FM_BUDGET_DATA WHERE YEAR='"+year+"' " +
-                                "AND BUDGET_DEPTID='"+deptId+"' AND SEC_NO='"+deletesecNos.get(i)+"'";
-                        DBSql.update(deleteSql);
+                        BudgetDataDao budgetDataDao=new BudgetDataDao();
+                        budgetDataDao.updateZero(year,deptId,deletesecNos.get(i));
 
                     }
                 }
@@ -118,6 +118,8 @@ public class DeptChangeAExeListener extends ExecuteListener {
                                 str.append("RATIO='"+dataChangenList.get(j).getString("RATIO")+"'");
                                 str.append(" WHERE YEAR='"+dataList.get(i).getString("YEAR")+"' AND BUDGET_DEPTID='"+dataList.get(i).getString("BUDGET_DEPTID")+"'");
                                 str.append(" AND SEC_NO='"+dataList.get(i).getString("SEC_NO")+"'");
+                                //更新汇总表数据
+                                DBSql.update(str.toString());
                             }
                         }
                     }

@@ -1,10 +1,10 @@
-package com.xonro.finance.web.servlet;
+package com.xonro.finance.web.server;
 
 import com.actionsoft.bpms.bo.engine.BO;
 import com.actionsoft.bpms.server.UserContext;
 import com.actionsoft.bpms.util.DBSql;
 import com.actionsoft.sdk.local.SDK;
-import com.xonro.finance.util.BoDataUtil;
+import com.xonro.finance.dao.BudgetDataDao;
 
 import java.util.List;
 
@@ -30,10 +30,9 @@ public class GetDeptBudgetInfo {
             }
 
         }
-        //根据年份以及预算部门Id，获取部门预算维护表中预算金额
-        String budgetSum=DBSql.getString("SELECT BUDGETSUM FROM BO_XR_FM_DEPTBUDGET WHERE YEAR='"+year+"' AND BUDGET_DEPTID='"+deptId+"'");
         //根据年份以及预算部门Id获取汇总中间表中预算数据
-        List<BO> sonDataList= BoDataUtil.getSonData(deptId,year,null);
+        BudgetDataDao budgetDataDao=new BudgetDataDao();
+        List<BO> sonDataList= budgetDataDao.getSonData(deptId,year,null);
         if(sonDataList!=null && sonDataList.size()>0){
             //重新插入部门预算编制变更子表中
             int[] number=SDK.getBOAPI().create("BO_XR_FM_DEPT_BUDGET_CHANGE_S",sonDataList,bindId,me.getUID());
@@ -41,6 +40,6 @@ public class GetDeptBudgetInfo {
                 result="2";
             }
         }
-        return result+"|"+budgetSum;
+        return result;
     }
 }
