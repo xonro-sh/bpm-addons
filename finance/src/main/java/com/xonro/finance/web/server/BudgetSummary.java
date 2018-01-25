@@ -39,7 +39,7 @@ public class BudgetSummary {
                 "SUM(OCTOBER_ACTUAL) OCTOBER_ACTUAL,SUM(NOVEMBER_ACTUAL) NOVEMBER_ACTUAL,SUM(DECEMBER_ACTUAL) DECEMBER_ACTUAL,SUM(TOTAL_ACTUAL) TOTAL_ACTUAL " +
                 "from BO_XR_FM_BUDGET_DATA where YEAR='" + year + "'");
 
-        if(!("".equals(departmentId) && departmentId == null)){
+        if(!("".equals(departmentId) || departmentId == null)){
             sql.append(" and BUDGET_DEPTID='"+departmentId+"'");
         }
         //根据科目分组查询
