@@ -1,13 +1,14 @@
 package com.xonro.finance.web;
 
+import com.actionsoft.bpms.commons.htmlframework.HtmlPageTemplate;
 import com.actionsoft.bpms.server.UserContext;
 import com.actionsoft.bpms.server.bind.annotation.Controller;
 import com.actionsoft.bpms.server.bind.annotation.Mapping;
 import com.actionsoft.bpms.util.DBSql;
-import com.xonro.finance.web.server.CompanyBudgetView;
-import com.xonro.finance.web.server.GetDeptBudgetInfo;
-import com.xonro.finance.web.server.MonthView;
-import com.xonro.finance.web.server.SubjectView;
+import com.xonro.finance.web.server.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 财务管理系统控制器
@@ -75,6 +76,24 @@ public class WebController {
         MonthView mv=new MonthView();
         return mv.getMonthView(month,year,deptId);
     }
-
+    /**
+     *根据年份以及预算部门Id获取数据
+     * @param year
+     * @param departmentId
+     */
+    @Mapping("com.xonro.apps.finance.budgetSummary")
+    public String budgetSummary(UserContext me,String year,String departmentId){
+        return new BudgetSummary().getBudget(me,year,departmentId);
+    }
+    /**
+     * 打开预算收支分析页面
+     */
+    @Mapping("com.xonro.apps.finance.budgetPage")
+    public String budgetPage(UserContext me){
+        //页面显示的数据
+        Map<String, Object> view = new HashMap<String, Object>();
+        view.put("sid",me.getSessionId());
+        return HtmlPageTemplate.merge("com.xonro.apps.finance","budgetSummary.html", view);
+    }
 
 }
