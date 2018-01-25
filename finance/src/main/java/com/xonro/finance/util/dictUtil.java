@@ -1,5 +1,7 @@
 package com.xonro.finance.util;
 
+import com.actionsoft.bpms.util.DBSql;
+
 /**
  * 字典公共类
  * @author  haolh
@@ -12,14 +14,16 @@ public class dictUtil {
      * @return
      */
     public static String getFirSubjectName(String firSubjectNo){
-        return "";
+        return DBSql.getString("select CNNAME from BO_ACT_DICT_KV_ITEM " +
+                "where DICTKEY='FINANCE.SUBJECT' and ITEMNO='"+firSubjectNo+"'");
     }
     /**
      * 根据二级科目编号获取二级科目名称
-     * @param secSsubjectNo
+     * @param secSubjectNo
      * @return
      */
-    public static String getSecSubjectName(String secSsubjectNo){
-        return "";
+    public static String getSecSubjectName(String secSubjectNo){
+        return DBSql.getString("select CNNAME from BO_ACT_DICT_KV_ITEM " +
+                "where DICTKEY='FINANCE.SUBJECT' and ITEMNO='"+secSubjectNo+"'");
     }
 }
