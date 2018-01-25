@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="XONRO_FinanceManager">
+    <output-path>$PROJECT_DIR$/out/artifacts/XONRO_FinanceManager</output-path>
+    <root id="archive" name="XONRO_FinanceManager.jar">
+      <element id="module-output" name="finance" />
+    </root>
+  </artifact>
+</component>
