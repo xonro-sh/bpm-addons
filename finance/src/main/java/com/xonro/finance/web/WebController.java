@@ -24,6 +24,7 @@ public class WebController {
      */
     @Mapping("com.xonro.apps.finance_getDeptBudgetInfo")
     public String getDeptBudgetInfo(UserContext me,String bindId,String year,String deptId){
+
         GetDeptBudgetInfo gt=new GetDeptBudgetInfo();
         return gt.getInfo(me,bindId,year,deptId);
     }
