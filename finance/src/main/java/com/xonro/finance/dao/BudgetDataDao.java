@@ -6,6 +6,7 @@ import com.actionsoft.bpms.commons.mvc.dao.DaoObject;
 import com.actionsoft.bpms.util.DBSql;
 import com.actionsoft.exception.AWSDataAccessException;
 import com.actionsoft.sdk.local.SDK;
+import com.xonro.finance.util.MonthUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +37,25 @@ public class BudgetDataDao extends DaoObject{
         return null;
     }
 
+    /**
+     * 修改汇总表，报销金额数据
+     * @param year    年份
+     * @param month   月份
+     * @param amount  金额
+     * @param deptId  部门Id
+     * @param secNo   二级科目编号
+     * @return
+     */
+    public int updateActualSum(String year,String month,double amount,String deptId,String secNo){
+        StringBuffer sql=new StringBuffer();
+
+        sql.append("UPDATE "+entityName()+" SET ");
+        sql.append(MonthUtil.getActualLable(month)+"="+MonthUtil.getActualLable(month)+"+"+amount);
+        sql.append(" WHERE YEAR='"+year+"'  AND BUDGET_DEPTID='"+deptId+"'");
+        sql.append(" AND SEC_NO='"+secNo+"'");
+        //更新汇总表数据
+       return DBSql.update(sql.toString());
+    }
     /**
      * 将对应条件的中间表数据，预算清0
      * @param year       年份
