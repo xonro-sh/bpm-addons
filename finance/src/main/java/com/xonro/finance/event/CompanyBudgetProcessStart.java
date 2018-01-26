@@ -82,10 +82,6 @@ public class CompanyBudgetProcessStart extends ExecuteListener {
                 //将预算放入List集合中
                 budgetList.add(budgetBo);
             }
-            //公司预算主表
-            BO mainBo = new BO();
-            mainBo.set("YEAR",year);
-            mainBo.set("BUDGETSUM",budgetSum);
             //更新主表年份和总预算
             SDK.getBOAPI().updateByBindId("BO_XR_FM_BUDGET",bindId,"YEAR",year);
             SDK.getBOAPI().updateByBindId("BO_XR_FM_BUDGET",bindId,"BUDGETSUM",budgetSum);
