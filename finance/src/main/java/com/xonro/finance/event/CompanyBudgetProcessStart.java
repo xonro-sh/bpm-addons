@@ -82,9 +82,11 @@ public class CompanyBudgetProcessStart extends ExecuteListener {
                 //将预算放入List集合中
                 budgetList.add(budgetBo);
             }
+            System.err.print(budgetSum);
             //更新主表年份和总预算
-            SDK.getBOAPI().updateByBindId("BO_XR_FM_BUDGET",bindId,"YEAR",year);
-            SDK.getBOAPI().updateByBindId("BO_XR_FM_BUDGET",bindId,"BUDGETSUM",budgetSum);
+            DBSql.update("update BO_XR_FM_BUDGET set YEAR='"+year+"',BUDGETSUM='"+budgetSum+"' where BINDID='"+bindId+"'");
+//            SDK.getBOAPI().updateByBindId("BO_XR_FM_BUDGET",bindId,"YEAR",year);
+//            SDK.getBOAPI().updateByBindId("BO_XR_FM_BUDGET",bindId,"BUDGETSUM",budgetSum);
             //插入预算汇总数据
             SDK.getBOAPI().create("BO_XR_FM_BUDGET_S",budgetList,bindId,ctx.getUserContext().getUID());
         } catch (Exception e){
