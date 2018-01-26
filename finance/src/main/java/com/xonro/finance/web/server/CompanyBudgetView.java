@@ -18,9 +18,10 @@ public class CompanyBudgetView {
     public String getCompanyBudgetView(UserContext me,String year){
         ResponseObject ro = ResponseObject.newOkResponse();
         EChartsOptionBuilder edChartBuilder = new EChartsOptionBuilder();
-        edChartBuilder.options().title("show", Boolean.valueOf(true)).title("text", "数据汇总图形报表").title("subtext","纯属虚构");
+        edChartBuilder.options().title("show", Boolean.valueOf(true)).title("text", "数据汇总图形报表").title("left","center");
         edChartBuilder.options().tooltip("trigger","axis");
         edChartBuilder.options().legend("data",new String[]{"预算金额","报销金额"});
+        edChartBuilder.options().legend("left","right");
         edChartBuilder.options().xAxis("type","category");
         String sql="SELECT SEC_NAME,sum(TOTAL) as TOTAL,SUM(TOTAL_ACTUAL) as " +
                 "TOTAL_ACTUAL FROM BO_XR_FM_BUDGET_DATA WHERE YEAR='2018' group by SEC_NAME";
