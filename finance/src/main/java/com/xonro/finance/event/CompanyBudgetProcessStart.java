@@ -7,6 +7,7 @@ import com.actionsoft.bpms.util.DBSql;
 import com.actionsoft.sdk.local.SDK;
 import com.xonro.finance.util.dictUtil;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -54,20 +55,40 @@ public class CompanyBudgetProcessStart extends ExecuteListener {
             ResultSetMetaData md = result.getMetaData();
             int columnCount = md.getColumnCount();
 
+            String[] months={"JANUARY","FEBRUARY","MARCH","APRIL","MAY","JUNE","JULY",
+                    "AUGUST","SEPTEMBER","OCTOBER","NOVEMBER","DECEMBER"};
+
+            //公司总预算
+            BigDecimal budgetSum = new BigDecimal(0);
             while (result.next()) {
+                //单科目总预算
+                BigDecimal total = new BigDecimal(0);
                 //定义BO数据
                 BO budgetBo = new BO();
                 //循环将列的值插入BO
                 for (int i = 1; i <= columnCount; i++) {
                     budgetBo.set(md.getColumnName(i), result.getObject(i));
+                    for (String month : months) {
+                        if(md.getColumnName(i).equals(month)){
+                            total = total.add((BigDecimal)result.getObject(i));
+                        }
+                    }
                 }
+                budgetSum = budgetSum.add(total);
                 //插入科目名称信息
+                budgetBo.set("TOTAL", total);
                 budgetBo.set("FIR_NAME", dictUtil.getFirSubjectName(result.getString("FIR_NO")));
                 budgetBo.set("SEC_NAME",dictUtil.getFirSubjectName(result.getString("SEC_NO")));
                 //将预算放入List集合中
                 budgetList.add(budgetBo);
             }
-
+            //公司预算主表
+            BO mainBo = new BO();
+            mainBo.set("YEAR",year);
+            mainBo.set("BUDGETSUM",budgetSum);
+            //更新主表年份和总预算
+            SDK.getBOAPI().updateByBindId("BO_XR_FM_BUDGET",bindId,"YEAR",year);
+            SDK.getBOAPI().updateByBindId("BO_XR_FM_BUDGET",bindId,"BUDGETSUM",budgetSum);
             //插入预算汇总数据
             SDK.getBOAPI().create("BO_XR_FM_BUDGET_S",budgetList,bindId,ctx.getUserContext().getUID());
         } catch (Exception e){
