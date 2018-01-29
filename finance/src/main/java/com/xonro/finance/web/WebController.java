@@ -95,5 +95,16 @@ public class WebController {
         view.put("sid",me.getSessionId());
         return HtmlPageTemplate.merge("com.xonro.apps.finance","budgetSummary.html", view);
     }
+    /**
+     * 改变年份刷新公司年度预算数据
+     * @param bindId
+     * @param year
+     */
+    @Mapping("com.xonro.apps.finance_updateCompanyBudget")
+    public String updateCompanyBudget(UserContext me,String bindId,String year){
+        //公司预算审批流程
+        CompanyBudgetProcess companyBudgetProcess = new CompanyBudgetProcess();
+        return companyBudgetProcess.updateBudget(me,bindId,year);
+    }
 
 }
