@@ -33,7 +33,8 @@ public class CompanyBudgetProcess {
                 "from BO_XR_FM_BUDGET_DATA where YEAR='" + year + "' group by FIR_NO,SEC_NO";
         //定义公司年度预算集合
         List<BO> budgetList = new ArrayList<BO>();
-
+        //公司总预算
+        BigDecimal budgetSum = new BigDecimal(0);
         try{
             stat = conn.createStatement();
             //执行sql查询  获得预算数据
@@ -45,8 +46,6 @@ public class CompanyBudgetProcess {
             String[] months={"JANUARY","FEBRUARY","MARCH","APRIL","MAY","JUNE","JULY",
                     "AUGUST","SEPTEMBER","OCTOBER","NOVEMBER","DECEMBER"};
 
-            //公司总预算
-            BigDecimal budgetSum = new BigDecimal(0);
             while (result.next()) {
                 //单科目总预算
                 BigDecimal total = new BigDecimal(0);
@@ -69,11 +68,8 @@ public class CompanyBudgetProcess {
                 //将预算放入List集合中
                 budgetList.add(budgetBo);
             }
-            BO mainBo = new BO();
-            mainBo.set("YEAR",year);
-            mainBo.set("BUDGETSUM",budgetSum);
-            //更新主表年份和总预算
-            SDK.getBOAPI().updateByBindId("BO_XR_FM_BUDGET",bindId,"BUDGETSUM",budgetSum);
+            //更新主表总预算
+            //SDK.getBOAPI().updateByBindId("BO_XR_FM_BUDGET",bindId,"BUDGETSUM",budgetSum);
             //删除子表预算数据
             SDK.getBOAPI().removeByBindId("BO_XR_FM_BUDGET_S",bindId);
             //插入子表预算数据
@@ -84,6 +80,6 @@ public class CompanyBudgetProcess {
             DBSql.close(conn);
         }
 
-        return "";
+        return "0:"+budgetSum.toString();
     }
 }
