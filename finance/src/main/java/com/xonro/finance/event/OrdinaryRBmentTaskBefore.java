@@ -66,6 +66,7 @@ public class OrdinaryRBmentTaskBefore extends InterruptListener {
                         //备注
                         String shareRemark=shareList.get(j).getString("REMARK");
                         data.set("THI_NAME",subjectName);
+                        data.set("EXPENSEMAN",userName);
                         data.set("USERNAME",shareName);
                         data.set("DEPARTMENTNAME",shareDepartment);
                         data.set("AMOUNT",shareAmount);
@@ -75,6 +76,7 @@ public class OrdinaryRBmentTaskBefore extends InterruptListener {
                     }
                     BO applyData=new BO();
                     applyData.set("THI_NAME",subjectName);
+                    applyData.set("EXPENSEMAN",userName);
                     applyData.set("USERNAME",userName);
                     applyData.set("DEPARTMENTNAME",department);
                     applyData.set("AMOUNT",amount-shareSum);
@@ -85,6 +87,7 @@ public class OrdinaryRBmentTaskBefore extends InterruptListener {
                     //没有分摊
                     BO applyData=new BO();
                     applyData.set("THI_NAME",subjectName);
+                    applyData.set("EXPENSEMAN",userName);
                     applyData.set("USERNAME",userName);
                     applyData.set("DEPARTMENTNAME",department);
                     applyData.set("AMOUNT",amount);
