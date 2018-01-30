@@ -6,6 +6,7 @@ import com.actionsoft.bpms.bpmn.engine.listener.ExecuteListener;
 import com.actionsoft.bpms.util.DBSql;
 import com.actionsoft.sdk.local.SDK;
 import com.xonro.finance.dao.BudgetDataDao;
+import com.xonro.finance.dao.PersonalDataDao;
 import com.xonro.finance.util.FlagUtil;
 
 import java.util.List;
@@ -45,13 +46,13 @@ public class OrdinaryRBmentProcessAfter extends ExecuteListener {
                     //根据boId判断，是否有报销
                     List<BO> shareList=SDK.getBOAPI().query("BO_XR_FM_ORDINARY_SHARE").addQuery("BINDID=",dataList.get(i).getString("ID")).list();
                     String secNo=dataList.get(i).getString("SEC_NO");
-                    Double amount=Double.valueOf(dataList.get(i).getString("AMOUNT"));
+                    Double amount=Double.valueOf(dataList.get(i).getString("TOTAL_AMOUNT"));
                     //如果有报销
                     if(shareList!=null && shareList.size()>0){
                         for(int j=0;j<shareList.size();j++){
                             //获取报销数据
                             String shareDeptId=shareList.get(j).getString("DEPARTMENTID");
-                            double shareAmount=Double.valueOf(shareList.get(j).getString("AMOUNT"));
+                            double shareAmount=Double.valueOf(shareList.get(j).getString("TOTAL_AMOUNT"));
                             //根据分摊数据更新汇总表
                             dao.updateActualSum(year,month,shareAmount,shareDeptId,secNo);
                             //获取申请实际报销金额
@@ -63,6 +64,16 @@ public class OrdinaryRBmentProcessAfter extends ExecuteListener {
                         //如果没有报销,更新汇总表数据
                         dao.updateActualSum(year,month,amount,deptId,secNo);
                     }
+                }
+            }
+            //根据bindid获取，普通费用分摊显示表数据
+            List<BO> shareShowList=SDK.getBOAPI().query("BO_XR_FM_ORDINARY_SHARE_SHOW").addQuery("BINDID=",bindId).list();
+            if(shareShowList!=null && shareShowList.size()>0){
+                for(int i=0;i<shareShowList.size();i++){
+                    //根据二级科目编号，传入对应字段
+                    String secNo=shareShowList.get(i).getString("SEC_NO");
+                    PersonalDataDao dao=new PersonalDataDao();
+                    dao.createPersonalData(shareShowList.get(i),bindId,year,secNo);
                 }
             }
         }else{
