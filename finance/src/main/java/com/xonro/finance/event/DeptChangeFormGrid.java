@@ -20,6 +20,10 @@ import java.util.List;
  */
 public class DeptChangeFormGrid extends FormGridFilterListener {
     @Override
+    public String getDescription() {
+        return "格式化子表显示,预算增加变红、减少变绿、新增预算标黄";
+    }
+    @Override
     public String orderByStatement(ProcessExecutionContext processExecutionContext) {
         return null;
     }
@@ -54,9 +58,9 @@ public class DeptChangeFormGrid extends FormGridFilterListener {
                     double changeData=Double.valueOf(bo.getString(monthArray[i]));
                     double data=getMonthData(monthArray[i],year,deptId,secNo);
                     if(changeData>data){
-                        bo.set(monthArray[i],"<a style=\"color: red\">"+df.format(changeData)+"↑</a>");
+                        bo.set(monthArray[i],"<a style=\"color: red\">"+df.format(changeData)+"  ↑</a>");
                     }if(changeData<data){
-                        bo.set(monthArray[i],"<a style=\"color: lawngreen\">"+df.format(changeData)+"↓</a>");
+                        bo.set(monthArray[i],"<a style=\"color: lawngreen\">"+df.format(changeData)+"  ↓</a>");
                     }
                 }
             }

@@ -98,6 +98,34 @@ public class DeptBudgetAExeListener extends ExecuteListener {
                 boData.set("TOTAL",deptSonList.get(i).get("TOTAL"));
                 //占比(%)
                 boData.set("RATIO",deptSonList.get(i).get("RATIO"));
+                //1月份实际
+                boData.set("JANUARY_ACTUAL",0);
+                //2月份实际
+                boData.set("FEBRUARY_ACTUAL",0);
+                //3月份实际
+                boData.set("MARCH_ACTUAL",0);
+                //4月份实际
+                boData.set("APRIL_ACTUAL",0);
+                //5月份实际
+                boData.set("MAY_ACTUAL",0);
+                //6月份实际
+                boData.set("JUNE_ACTUAL",0);
+                //7月份实际
+                boData.set("JULY_ACTUAL",0);
+                //8月份实际
+                boData.set("AUGUST_ACTUAL",0);
+                //9月份实际
+                boData.set("SEPTEMBER_ACTUAL",0);
+                //10月份实际
+                boData.set("OCTOBER_ACTUAL",0);
+                //11月份实际
+                boData.set("NOVEMBER_ACTUAL",0);
+                //12月份实际
+                boData.set("DECEMBER_ACTUAL",0);
+                //合计实际
+                boData.set("TOTAL_ACTUAL",0);
+                //占比实际
+                boData.set("RATIO_ACTUAL","0");
 
                 //将数据添加到集合中
                 boList.add(boData);

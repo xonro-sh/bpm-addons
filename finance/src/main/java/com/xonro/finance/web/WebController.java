@@ -5,6 +5,7 @@ import com.actionsoft.bpms.server.UserContext;
 import com.actionsoft.bpms.server.bind.annotation.Controller;
 import com.actionsoft.bpms.server.bind.annotation.Mapping;
 import com.actionsoft.bpms.util.DBSql;
+import com.actionsoft.bpms.util.UtilNumber;
 import com.xonro.finance.util.dictUtil;
 import com.xonro.finance.web.server.*;
 
@@ -116,6 +117,16 @@ public class WebController {
     public String getSecSubjects(UserContext me,String bindId,String year){
         //返回二级科目集合
         return dictUtil.getSecSubjects();
+    }
+
+    /**
+     * 获取金额大写
+     * @param totalAmount  合计金额
+     * @return
+     */
+    @Mapping("com.xonro.apps.finance_getAmountBig")
+    public String getAmountBig(String totalAmount){
+        return UtilNumber.toRMB(Double.valueOf(totalAmount));
     }
 
 }
