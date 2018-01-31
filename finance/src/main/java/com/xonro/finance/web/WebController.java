@@ -5,6 +5,7 @@ import com.actionsoft.bpms.server.UserContext;
 import com.actionsoft.bpms.server.bind.annotation.Controller;
 import com.actionsoft.bpms.server.bind.annotation.Mapping;
 import com.actionsoft.bpms.util.DBSql;
+import com.xonro.finance.util.dictUtil;
 import com.xonro.finance.web.server.*;
 
 import java.util.HashMap;
@@ -82,8 +83,8 @@ public class WebController {
      * @param departmentId
      */
     @Mapping("com.xonro.apps.finance.budgetSummary")
-    public String budgetSummary(UserContext me,String year,String departmentId){
-        return new BudgetSummary().getBudget(me,year,departmentId);
+    public String budgetSummary(UserContext me,String year,String departmentId,String subject){
+        return new BudgetSummary().getBudget(me,year,departmentId,subject);
     }
     /**
      * 打开预算收支分析页面
@@ -105,6 +106,16 @@ public class WebController {
         //公司预算审批流程
         CompanyBudgetProcess companyBudgetProcess = new CompanyBudgetProcess();
         return companyBudgetProcess.updateBudget(me,bindId,year);
+    }
+    /**
+     * 获取二级科目数据
+     * @param bindId
+     * @param year
+     */
+    @Mapping("com.xonro.apps.finance_getSecSubjects")
+    public String getSecSubjects(UserContext me,String bindId,String year){
+        //返回二级科目集合
+        return dictUtil.getSecSubjects();
     }
 
 }

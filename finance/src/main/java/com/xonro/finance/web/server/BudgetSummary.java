@@ -26,7 +26,7 @@ public class BudgetSummary {
      * @param departmentId
      * @return
      */
-    public String getBudget(UserContext me, String year, String departmentId){
+    public String getBudget(UserContext me, String year, String departmentId,String subject){
         Connection conn = DBSql.open();
         Statement stat = null;
         ResultSet result = null;
@@ -38,9 +38,13 @@ public class BudgetSummary {
                 "SUM(MAY_ACTUAL) MAY_ACTUAL,SUM(JUNE_ACTUAL) JUNE_ACTUAL,SUM(JULY_ACTUAL) JULY_ACTUAL,SUM(AUGUST_ACTUAL) AUGUST_ACTUAL,SUM(SEPTEMBER_ACTUAL) SEPTEMBER_ACTUAL," +
                 "SUM(OCTOBER_ACTUAL) OCTOBER_ACTUAL,SUM(NOVEMBER_ACTUAL) NOVEMBER_ACTUAL,SUM(DECEMBER_ACTUAL) DECEMBER_ACTUAL,SUM(TOTAL_ACTUAL) TOTAL_ACTUAL " +
                 "from BO_XR_FM_BUDGET_DATA where YEAR='" + year + "'");
-
+        //增加部门查询
         if(!("".equals(departmentId) || departmentId == null)){
             sql.append(" and BUDGET_DEPTID='"+departmentId+"'");
+        }
+        //增加科目查询
+        if(!("".equals(subject) || subject == null)){
+            sql.append(" and SEC_NO='"+subject+"'");
         }
         //根据科目分组查询
         sql.append(" group by FIR_NO,SEC_NO");
