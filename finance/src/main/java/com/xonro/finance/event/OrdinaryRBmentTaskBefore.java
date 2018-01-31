@@ -35,16 +35,26 @@ public class OrdinaryRBmentTaskBefore extends InterruptListener {
             for(int i=0;i<boList.size();i++){
                 //BOID
                 String boId=boList.get(i).getString("ID");
-                //科目名称
-                String subjectName=boList.get(i).getString("THI_NAME");
+                //二级科目编号
+                String secNo=boList.get(i).getString("SEC_NO");
+                //二级科目名称
+                String secName=boList.get(i).getString("SEC_NAME");
+                //三级科目编号
+                String thiNo=boList.get(i).getString("THI_NO");
+                //三级科目名称
+                String thiName=boList.get(i).getString("THI_NAME");
                 //申请人
                 String userName=context.getUserContext().getUserName();
+                //申请人Id
+                String userId=context.getUserContext().getUID();
                 //申请人部门
                 String department=context.getUserContext().getDepartmentModel().getName();
+                //申请人部门Id
+                String departmentId=context.getUserContext().getDepartmentModel().getId();
                 //备注
                 String remark=boList.get(i).getString("REMARK");
                 //报销金额
-                double amount=Double.valueOf(boList.get(i).getString("AMOUNT"));
+                double amount=Double.valueOf(boList.get(i).getString("TOTAL_AMOUNT"));
                 //分摊金额合计
                 double shareSum=0;
                 //根据boId获取,对应分摊子表数据
@@ -55,42 +65,61 @@ public class OrdinaryRBmentTaskBefore extends InterruptListener {
                         BO data=new BO();
                         //分摊人姓名
                         String shareName=shareList.get(j).getString("USERNAME");
+                        //分摊人Id
+                        String shareUserId=shareList.get(j).getString("USERID");
                         //分摊人部门
                         String shareDepartment=shareList.get(j).getString("DEPARTMENTNAME");
+                        //分摊人部门Id
+                        String shareDepartmentId=shareList.get(j).getString("DEPARTMENTID");
                         //分摊金额
-                        double shareAmount=Double.valueOf(shareList.get(j).getString("AMOUNT"));
+                        double shareAmount=Double.valueOf(shareList.get(j).getString("TOTAL_AMOUNT"));
                         //分摊金额合计
                         shareSum=shareSum+shareAmount;
                         //分摊比例
                         double shareRatio=(shareAmount/amount)*100;
                         //备注
                         String shareRemark=shareList.get(j).getString("REMARK");
-                        data.set("THI_NAME",subjectName);
+                        data.set("SEC_NO",secNo);
+                        data.set("SEC_NAME",secName);
+                        data.set("THI_NO",thiNo);
+                        data.set("THI_NAME",thiName);
                         data.set("EXPENSEMAN",userName);
                         data.set("USERNAME",shareName);
+                        data.set("USERID",shareUserId);
                         data.set("DEPARTMENTNAME",shareDepartment);
-                        data.set("AMOUNT",shareAmount);
+                        data.set("DEPARTMENTID",shareDepartmentId);
+                        data.set("TOTAL_AMOUNT",shareAmount);
                         data.set("REMARK",shareRemark);
                         data.set("SHARE_RATIO",shareRatio);
                         SDK.getBOAPI().create("BO_XR_FM_ORDINARY_SHARE_SHOW",data,bindId,"admin");
                     }
                     BO applyData=new BO();
-                    applyData.set("THI_NAME",subjectName);
+                    applyData.set("SEC_NO",secNo);
+                    applyData.set("SEC_NAME",secName);
+                    applyData.set("THI_NO",thiNo);
+                    applyData.set("THI_NAME",thiName);
                     applyData.set("EXPENSEMAN",userName);
                     applyData.set("USERNAME",userName);
+                    applyData.set("USERID",userId);
                     applyData.set("DEPARTMENTNAME",department);
-                    applyData.set("AMOUNT",amount-shareSum);
+                    applyData.set("DEPARTMENTID",departmentId);
+                    applyData.set("TOTAL_AMOUNT",amount-shareSum);
                     applyData.set("REMARK",remark);
                     applyData.set("SHARE_RATIO",((amount-shareSum)/amount)*100);
                     SDK.getBOAPI().create("BO_XR_FM_ORDINARY_SHARE_SHOW",applyData,bindId,"admin");
                 }else{
                     //没有分摊
                     BO applyData=new BO();
-                    applyData.set("THI_NAME",subjectName);
+                    applyData.set("SEC_NO",secNo);
+                    applyData.set("SEC_NAME",secName);
+                    applyData.set("THI_NO",thiNo);
+                    applyData.set("THI_NAME",thiName);
                     applyData.set("EXPENSEMAN",userName);
                     applyData.set("USERNAME",userName);
+                    applyData.set("USERID",userId);
                     applyData.set("DEPARTMENTNAME",department);
-                    applyData.set("AMOUNT",amount);
+                    applyData.set("DEPARTMENTID",departmentId);
+                    applyData.set("TOTAL_AMOUNT",amount);
                     applyData.set("REMARK",remark);
                     applyData.set("SHARE_RATIO",100);
                     SDK.getBOAPI().create("BO_XR_FM_ORDINARY_SHARE_SHOW",applyData,bindId,"admin");

@@ -37,8 +37,12 @@ public class TravelRBmentTaskBefore extends InterruptListener {
                 String boId=boList.get(i).getString("ID");
                 //申请人
                 String userName=context.getUserContext().getUserName();
+                //申请人Id
+                String userId=context.getUserContext().getUID();
                 //申请人部门
                 String department=context.getUserContext().getDepartmentModel().getName();
+                //申请人部门Id
+                String departmentId=context.getUserContext().getDepartmentModel().getId();
                 //火车表金额
                 double trainCost=Double.valueOf(boList.get(i).getString("TRAIN_COST"));
                 //分摊火车票金额合计
@@ -81,8 +85,12 @@ public class TravelRBmentTaskBefore extends InterruptListener {
                         BO data=new BO();
                         //分摊人姓名
                         String shareName=shareList.get(j).getString("USERNAME");
+                        //分摊人账号
+                        String shareUserId=shareList.get(j).getString("USERID");
                         //分摊人部门
                         String shareDepartment=shareList.get(j).getString("DEPARTMENTNAME");
+                        //分摊人部门Id
+                        String shareDepartmentId=shareList.get(j).getString("DEPARTMENTID");
                         //分摊火车票金额
                         double shareTrain=Double.valueOf(shareList.get(j).getString("TRAIN_COST"));
                         //分摊火车票金额合计
@@ -121,7 +129,9 @@ public class TravelRBmentTaskBefore extends InterruptListener {
                         String shareRemark=shareList.get(j).getString("REMARK");
                         data.set("EXPENSEMAN",userName);
                         data.set("USERNAME",shareName);
+                        data.set("USERID",shareUserId);
                         data.set("DEPARTMENTNAME",shareDepartment);
+                        data.set("DEPARTMENTID",shareDepartmentId);
                         data.set("TRAIN_COST",shareTrain);
                         data.set("AIR_COST",shareAir);
                         data.set("BUS_COST",shareBus);
@@ -137,7 +147,9 @@ public class TravelRBmentTaskBefore extends InterruptListener {
                     BO applyData=new BO();
                     applyData.set("EXPENSEMAN",userName);
                     applyData.set("USERNAME",userName);
+                    applyData.set("USERID",userId);
                     applyData.set("DEPARTMENTNAME",department);
+                    applyData.set("DEPARTMENTID",departmentId);
                     applyData.set("TRAIN_COST",trainCost-shareTrainSum);
                     applyData.set("AIR_COST",airCost-shareAirSum);
                     applyData.set("BUS_COST",busCost-shareBusSum);
@@ -154,7 +166,9 @@ public class TravelRBmentTaskBefore extends InterruptListener {
                     BO applyData=new BO();
                     applyData.set("EXPENSEMAN",userName);
                     applyData.set("USERNAME",userName);
+                    applyData.set("USERID",userId);
                     applyData.set("DEPARTMENTNAME",department);
+                    applyData.set("DEPARTMENTID",departmentId);
                     applyData.set("TRAIN_COST",trainCost);
                     applyData.set("AIR_COST",airCost);
                     applyData.set("BUS_COST",busCost);

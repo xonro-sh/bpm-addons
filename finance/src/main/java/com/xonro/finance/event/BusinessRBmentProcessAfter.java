@@ -6,6 +6,7 @@ import com.actionsoft.bpms.bpmn.engine.listener.ExecuteListener;
 import com.actionsoft.bpms.util.DBSql;
 import com.actionsoft.sdk.local.SDK;
 import com.xonro.finance.dao.BudgetDataDao;
+import com.xonro.finance.dao.PersonalDataDao;
 import com.xonro.finance.util.FlagUtil;
 
 import java.util.List;
@@ -66,6 +67,14 @@ public class BusinessRBmentProcessAfter extends ExecuteListener {
                         //更新汇总表对应数据
                         dao.updateActualSum(year,month,sum,deptId,secNo);
                     }
+                }
+            }
+            //根据bindid获取，业务招待费分摊显示表数据
+            List<BO> shareShowList=SDK.getBOAPI().query("BO_XR_FM_BUSINESS_SHARE_SHOW").addQuery("BINDID=",bindId).list();
+            if(shareShowList!=null && shareShowList.size()>0){
+                for(int i=0;i<shareShowList.size();i++){
+                    PersonalDataDao dao=new PersonalDataDao();
+                    dao.createPersonalData(shareShowList.get(i),bindId,year,secNo);
                 }
             }
         }else{

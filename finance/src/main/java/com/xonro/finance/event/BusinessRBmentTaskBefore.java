@@ -37,8 +37,12 @@ public class BusinessRBmentTaskBefore extends InterruptListener {
                 String boId=boList.get(i).getString("ID");
                 //申请人
                 String userName=context.getUserContext().getUserName();
+                //申请人Id
+                String userId=context.getUserContext().getUID();
                 //申请人部门
                 String department=context.getUserContext().getDepartmentModel().getName();
+                //申请人部门Id
+                String departmentId=context.getUserContext().getDepartmentModel().getId();
                 //请客吃饭费金额
                 double mealCost=Double.valueOf(boList.get(i).getString("MEAL_COST"));
                 //分摊请客吃饭费金额合计
@@ -65,8 +69,12 @@ public class BusinessRBmentTaskBefore extends InterruptListener {
                         BO data=new BO();
                         //分摊人姓名
                         String shareName=shareList.get(j).getString("USERNAME");
+                        //分摊人Id
+                        String shareUserId=shareList.get(j).getString("USERID");
                         //分摊人部门
                         String shareDepartment=shareList.get(j).getString("DEPARTMENTNAME");
+                        //分摊人部门Id
+                        String shareDepartmentId=shareList.get(j).getString("DEPARTMENTID");
                         //分摊请客吃饭金额
                         double shareMeal=Double.valueOf(shareList.get(j).getString("MEAL_COST"));
                         //分摊请客吃饭金额合计
@@ -89,7 +97,9 @@ public class BusinessRBmentTaskBefore extends InterruptListener {
                         String shareRemark=shareList.get(j).getString("REMARK");
                         data.set("EXPENSEMAN",userName);
                         data.set("USERNAME",shareName);
+                        data.set("USERID",shareUserId);
                         data.set("DEPARTMENTNAME",shareDepartment);
+                        data.set("DEPARTMENTID",shareDepartmentId);
                         data.set("MEAL_COST",shareMeal);
                         data.set("GIFT_COST",shareGift);
                         data.set("OTHER_COST",shareOther);
@@ -101,7 +111,9 @@ public class BusinessRBmentTaskBefore extends InterruptListener {
                     BO applyData=new BO();
                     applyData.set("EXPENSEMAN",userName);
                     applyData.set("USERNAME",userName);
+                    applyData.set("USERID",userId);
                     applyData.set("DEPARTMENTNAME",department);
+                    applyData.set("DEPARTMENTID",departmentId);
                     applyData.set("MEAL_COST",mealCost-shareMealSum);
                     applyData.set("GIFT_COST",giftCost-shareGiftSum);
                     applyData.set("OTHER_COST",otherCost-shareOtherSum);
@@ -114,7 +126,9 @@ public class BusinessRBmentTaskBefore extends InterruptListener {
                     BO applyData=new BO();
                     applyData.set("EXPENSEMAN",userName);
                     applyData.set("USERNAME",userName);
+                    applyData.set("USERID",userId);
                     applyData.set("DEPARTMENTNAME",department);
+                    applyData.set("DEPARTMENTID",departmentId);
                     applyData.set("MEAL_COST",mealCost);
                     applyData.set("GIFT_COST",giftCost);
                     applyData.set("OTHER_COST",otherCost);
