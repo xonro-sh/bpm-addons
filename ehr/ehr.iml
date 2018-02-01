@@ -12,5 +12,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="aws6-lib" level="application" />
+    <orderEntry type="library" name="aws6-jdbc" level="application" />
   </component>
 </module>

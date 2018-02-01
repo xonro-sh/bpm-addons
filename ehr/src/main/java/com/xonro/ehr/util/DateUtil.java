@@ -25,4 +25,14 @@ public class DateUtil {
         //本月份的天数
         return calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
     }
+
+    /**
+     * 获取系统年份
+     * @return
+     */
+    public static String getSysYear() {
+        Calendar calendar = Calendar.getInstance();
+        String year = String.valueOf(calendar.get(Calendar.YEAR));
+        return year;
+    }
 }

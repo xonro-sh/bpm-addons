@@ -3,6 +3,8 @@ package com.xonro.ehr.attendance.web;
 import com.actionsoft.bpms.server.UserContext;
 import com.actionsoft.bpms.server.bind.annotation.Controller;
 import com.actionsoft.bpms.server.bind.annotation.Mapping;
+import com.xonro.ehr.attendance.web.server.AutoSchedulingWeb;
+import com.xonro.ehr.util.DateUtil;
 
 /**
  * 人事管理模块控制器类
@@ -18,7 +20,9 @@ public class WebController {
      * @param
      */
     @Mapping("com.xonro.apps.ehr_autoScheduling")
-    public String autoScheduling(UserContext me,String bindId,String year,String month,String departmentId,String category){
-        return "";
+    public String autoScheduling(UserContext me,String bindId,String month,String departmentId,String category){
+        String year = DateUtil.getSysYear();
+        AutoSchedulingWeb autoSchedulingWeb = new AutoSchedulingWeb();
+        return autoSchedulingWeb.autoScheduling(me,bindId,year,month,departmentId,category);
     }
 }

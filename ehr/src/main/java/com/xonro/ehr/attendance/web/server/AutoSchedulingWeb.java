@@ -1,10 +1,14 @@
 package com.xonro.ehr.attendance.web.server;
 
 import com.actionsoft.bpms.bo.engine.BO;
+import com.actionsoft.bpms.org.model.DepartmentModel;
+import com.actionsoft.bpms.org.model.UserModel;
 import com.actionsoft.bpms.server.UserContext;
 import com.actionsoft.sdk.local.SDK;
 import com.xonro.ehr.attendance.util.AttendanceUtil;
+import com.xonro.ehr.util.DateUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,27 +29,40 @@ public class AutoSchedulingWeb {
      */
     public String autoScheduling(UserContext me, String bindId, String year, String month, String departmentId, String category){
         //获取部门信息
-        List<BO> department = SDK.getBOAPI().query("ORGUSER").addQuery("DEPARTMENTID=",departmentId).list();
+        DepartmentModel department = SDK.getORGAPI().getDepartmentById(departmentId);
         //获取部门人员
-        List<BO> userList = SDK.getBOAPI().query("ORGUSER").addQuery("DEPARTMENTID=",departmentId).list();
+        List<UserModel> userList = SDK.getORGAPI().getUsersByDepartment(departmentId);
+        //排班信息List
+        List<BO> schedulingList = new ArrayList<BO>();
         //遍历生成排班信息
         for (int i = 0; i < userList.size(); i++){
             //获取单个人员
-            BO user = userList.get(i);
+            UserModel user = userList.get(i);
             //排班信息
             BO schedulingBo = new BO();
-            schedulingBo.set("USERID",user.getString("USERID"));
-            schedulingBo.set("USERNAME",user.getString("USERNAME"));
-            schedulingBo.set("DEPARTMENTNAME",user.getString(""));
+            schedulingBo.set("USERID",user.getUID());
+            schedulingBo.set("USERNAME",user.getUserName());
+            schedulingBo.set("DEPARTMENTNAME",department.getName());
             schedulingBo.set("DEPARTMENTID",departmentId);
-            schedulingBo.set("POSITIONNAME",user.getString(""));
-            schedulingBo.set("COMPANYNAME",user.getString(""));
-            schedulingBo.set("COMPANYID",user.getString(""));
-
+            schedulingBo.set("POSITIONNAME","");
+            schedulingBo.set("COMPANYNAME","");
+            schedulingBo.set("COMPANYID","");
+            //获取该月天数
+            int dayNum = DateUtil.getDayNum(Integer.parseInt(year),Integer.parseInt(year));
+            for(int j = 1;j <= dayNum; j++){
+                schedulingBo.set("DAY"+j,category);
+            }
+            schedulingList.add(schedulingBo);
         }
+        //将排班信息插入子表
+        SDK.getBOAPI().create("BO_XR_HR_TC_SCHEDULE",schedulingList,bindId,me.getUID());
         //获取当月节假日期
         List<BO> holidayDate = AttendanceUtil.getHolidayDate(year,month);
-
+        for (int i = 0; i < holidayDate.size(); i++){
+            BO holiday = holidayDate.get(i);
+            String date = holiday.getString("HOLIDAYDATE");
+            SDK.getBOAPI().updateByBindId("BO_XR_HR_TC_SCHEDULE",bindId,"DAY"+date,"A1005");
+        }
         return "";
     }
 }
