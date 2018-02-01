@@ -18,7 +18,7 @@ public class WebController {
      * @param
      */
     @Mapping("com.xonro.apps.ehr_autoScheduling")
-    public String autoScheduling(UserContext me,String month,String departmentId,String category){
+    public String autoScheduling(UserContext me,String bindId,String year,String month,String departmentId,String category){
         return "";
     }
 }

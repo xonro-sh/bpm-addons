@@ -13,13 +13,13 @@ import java.util.List;
 public class AttendanceUtil {
 
     /**
-     * 获取某月节假日期
+     * 获取某年某月节假日期
      * @param month
      * @return
      */
-    public static List<BO> getHolidayDate(String month){
-        //获取某个月份节假日数据
-        List<BO> holidayDate = SDK.getBOAPI().query("BO_XR_HR_TC_HOLIDAY").addQuery("MONTH=",month).list();
+    public static List<BO> getHolidayDate(String year,String month){
+        //获取年度某个月份节假日数据
+        List<BO> holidayDate = SDK.getBOAPI().query("BO_XR_HR_TC_HOLIDAY").addQuery("YEAR=",year).addQuery("MONTH=",month).list();
         return holidayDate;
     }
 
