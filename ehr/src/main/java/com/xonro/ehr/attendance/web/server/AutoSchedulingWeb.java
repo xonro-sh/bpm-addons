@@ -46,7 +46,7 @@ public class AutoSchedulingWeb {
             schedulingBo.set("DEPARTMENTID",departmentId);
             schedulingBo.set("POSITIONNAME","");
             schedulingBo.set("COMPANYNAME","");
-            schedulingBo.set("COMPANYID","");
+            schedulingBo.set("COMPANYID"," ");
             //获取该月天数
             int dayNum = DateUtil.getDayNum(Integer.parseInt(year),Integer.parseInt(year));
             for(int j = 1;j <= dayNum; j++){
