@@ -1,6 +1,10 @@
 package com.xonro.ehr.util;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * 日期公共类
@@ -34,5 +38,22 @@ public class DateUtil {
         Calendar calendar = Calendar.getInstance();
         String year = String.valueOf(calendar.get(Calendar.YEAR));
         return year;
+    }
+
+    /**
+     * 判断是日期是否为周六周日
+     * @param date
+     * @return
+     * @throws ParseException
+     */
+    public static boolean isWeekend(String date) throws ParseException {
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date bdate = format.parse(date);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(bdate);
+        if(calendar.get(Calendar.DAY_OF_WEEK)==Calendar.SATURDAY||calendar.get(Calendar.DAY_OF_WEEK)==Calendar.SUNDAY){
+            return true;
+        }
+        return false;
     }
 }

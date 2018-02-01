@@ -12,6 +12,13 @@ import java.util.List;
  */
 public class AttendanceUtil {
 
+    //默认班次
+    public static String WEEKENDDAY = "B02";
+    public static String HOLIDAY = "B01";
+    public static String DAY1 = "A01";
+    public static String DAY2 = "A02";
+    public static String DAY3 = "A03";
+
     /**
      * 获取某年某月节假日期
      * @param month
