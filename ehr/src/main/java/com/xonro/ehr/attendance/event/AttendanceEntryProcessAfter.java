@@ -31,20 +31,18 @@ public class AttendanceEntryProcessAfter extends ExecuteListener {
             //根据bindId获取当前年份、月份、录入部门Id等数据
             String year= DBSql.getString("SELECT YEAR FROM BO_XR_HR_TC_DATAENTRY WHERE BINDID='"+bindId+"'");
             String month=DBSql.getString("SELECT MONTH FROM BO_XR_HR_TC_DATAENTRY WHERE BINDID='"+bindId+"'");
-            String inputDeptId=DBSql.getString("SELECT INPUT_DEPTID FROM BO_XR_HR_TC_DATAENTRY WHERE BINDID=''");
+            String inputDeptId=DBSql.getString("SELECT INPUT_DEPTID FROM BO_XR_HR_TC_DATAENTRY WHERE BINDID='"+bindId+"'");
             //根据bindId获取Excel导入数据
             List<BO> inputData=SDK.getBOAPI().query("BO_XR_HR_TC_DATAENTRY_S").addQuery("BINDID=",bindId).list();
             //根据年份、月份、录入部门Id等信息判断，考勤流水表中是否存在数据
-            List<BO> dataList= SDK.getBOAPI().query("BO_XR_HR_TC_RECORD").addQuery("YEAR=",year).
-                    addQuery("MONTH",month).addQuery("DEPARTMENTID",inputDeptId).list();
-            
+                List<BO> dataList= SDK.getBOAPI().query("BO_XR_HR_TC_RECORD").addQuery("YEAR=",year).
+                    addQuery("MONTH=",month).addQuery("DEPARTMENTID=",inputDeptId).list();
+
             AttendanceDao dao=new AttendanceDao();
             if(dataList!=null && dataList.size()>0){
                 //如果有数据,删掉原来的数据，重新插入
                 String deleteSql="DELETE FROM BO_XR_HR_TC_RECORD WHERE YEAR='"+year+"' AND MONTH='"+month+"' AND DEPARTMENTID='"+inputDeptId+"'";
                 DBSql.update(deleteSql);
-                //向流水表中插入新数据
-                dao.entryAttendancData(inputData,inputDeptId,year,month,bindId);
             }
             //向流水表中插入新数据
             dao.entryAttendancData(inputData,inputDeptId,year,month,bindId);
