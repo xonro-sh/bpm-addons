@@ -4,6 +4,7 @@ import com.actionsoft.bpms.bo.engine.BO;
 import com.actionsoft.bpms.org.model.DepartmentModel;
 import com.actionsoft.bpms.org.model.UserModel;
 import com.actionsoft.bpms.server.UserContext;
+import com.actionsoft.bpms.util.DBSql;
 import com.actionsoft.sdk.local.SDK;
 import com.xonro.ehr.attendance.util.AttendanceUtil;
 import com.xonro.ehr.util.DateUtil;
@@ -27,18 +28,34 @@ public class AutoSchedulingWeb {
      * @param category
      * @return
      */
-    public String autoScheduling(UserContext me, String bindId, String year, String month, String departmentId, String category){
+    public String autoScheduling(UserContext me,String bindId,String year,String month,String type,String departmentId,
+                                 String userIdList,String category){
         try{
             //获取部门信息
             DepartmentModel department = SDK.getORGAPI().getDepartmentById(departmentId);
             //获取部门人员
-            List<UserModel> userList = SDK.getORGAPI().getUsersByDepartment(departmentId);
+            List<UserModel> userList = new ArrayList<UserModel>();
+
+            if("按部门生成".equals(type)){
+                userList = SDK.getORGAPI().getUsersByDepartment(departmentId);
+            }else if("按人员生成".equals(type)){
+                String[] userIds = userIdList.split(",");
+                for(int i = 0; i < userIds.length; i++){
+                    String userId = userIds[i];
+                    UserModel userModel = SDK.getORGAPI().getUser(userId);
+                    userList.add(userModel);
+                }
+            }
+            SDK.getORGAPI().getUsersByDepartment(departmentId);
             //排班信息List
             List<BO> schedulingList = new ArrayList<BO>();
             //遍历生成排班信息
             for (int i = 0; i < userList.size(); i++){
                 //获取单个人员
                 UserModel user = userList.get(i);
+                if(!validateScheduling(user.getUID(),year,month)){
+                    return "0:用户"+user.getUserName()+"的排班信息已存在,生成失败。";
+                }
                 //排班信息
                 BO schedulingBo = new BO();
                 schedulingBo.set("USERID",user.getUID());
@@ -51,13 +68,24 @@ public class AutoSchedulingWeb {
                 schedulingBo.set("YEAR",year);
                 schedulingBo.set("MONTH",month);
                 //获取该月天数
-                int dayNum = DateUtil.getDayNum(Integer.parseInt(year),Integer.parseInt(year));
+                int dayNum = DateUtil.getDayNum(Integer.parseInt(year),Integer.parseInt(month));
                 for(int j = 1;j <= dayNum; j++){
+                    //获取日期
+                    String date = "";
+                    if(month.length() < 2){
+                        date = year+"-0"+month+"-"+j;
+                    }else{
+                        date = year+"-"+month+"-"+j;
+                    }
+                    //当前日期是假期
+                    if(AttendanceUtil.ifHoliday(date)){
+                        schedulingBo.set("DAY"+j,AttendanceUtil.HOLIDAY);
+                        continue;
+                    }
                     //如果周末不排班
                     if(1 == 1){
-                        //获取日期
-                        String date = year+"-"+month+"-"+j;
-                        if(DateUtil.isWeekend(date)){
+                        //如果是周末 且 没有调班信息
+                        if(DateUtil.isWeekend(date) && !AttendanceUtil.ifWeekendWork(date)){
                             schedulingBo.set("DAY"+j,AttendanceUtil.WEEKENDDAY);
                         }else {
                             schedulingBo.set("DAY"+j,category);
@@ -75,17 +103,33 @@ public class AutoSchedulingWeb {
             //将排班信息插入子表
             SDK.getBOAPI().create("BO_XR_HR_TC_SCHEDULE",schedulingList,bindId,me.getUID());
             //获取当月节假日期
-            List<BO> holidayDate = AttendanceUtil.getHolidayDate(year,month);
-            for (int i = 0; i < holidayDate.size(); i++){
-                BO holiday = holidayDate.get(i);
-                String date = holiday.getString("HOLIDAYDATE");
-                SDK.getBOAPI().updateByBindId("BO_XR_HR_TC_SCHEDULE",bindId,"DAY"+date,AttendanceUtil.HOLIDAY);
-            }
+//            List<BO> holidayDate = AttendanceUtil.getHolidayDate(year,month);
+//            for (int i = 0; i < holidayDate.size(); i++){
+//                BO holiday = holidayDate.get(i);
+//                String date = holiday.getString("HOLIDAYDATE");
+//                SDK.getBOAPI().updateByBindId("BO_XR_HR_TC_SCHEDULE",bindId,"DAY"+date,AttendanceUtil.HOLIDAY);
+//            }
         }catch (Exception e){
             e.printStackTrace();
         }finally {
 
         }
         return "";
+    }
+
+    /**
+     * 校验用户排班是否已存在
+     * @param userId
+     * @param year
+     * @param month
+     * @return
+     */
+    public boolean validateScheduling(String userId,String year,String month){
+        int count = DBSql.getInt("select count(*) count from BO_XR_HR_TC_SCHEDULE where " +
+                "USERID='"+userId+"' and YEAR='"+year+"' and MONTH='"+month+"'","count");
+        if(count > 0){
+            return false;
+        }
+        return true;
     }
 }
