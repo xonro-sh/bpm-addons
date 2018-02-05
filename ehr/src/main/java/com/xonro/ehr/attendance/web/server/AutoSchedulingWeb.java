@@ -70,11 +70,16 @@ public class AutoSchedulingWeb {
                 //获取该月天数
                 int dayNum = DateUtil.getDayNum(Integer.parseInt(year),Integer.parseInt(year));
                 for(int j = 1;j <= dayNum; j++){
+                    //获取日期
+                    String date = year+"-"+month+"-"+j;
+                    //当前日期是假期
+                    if(AttendanceUtil.ifHoliday(date)){
+                        schedulingBo.set("DAY"+j,AttendanceUtil.HOLIDAY);
+                    }
                     //如果周末不排班
                     if(1 == 1){
-                        //获取日期
-                        String date = year+"-"+month+"-"+j;
-                        if(DateUtil.isWeekend(date)){
+                        //如果是周末 且 没有调班信息
+                        if(DateUtil.isWeekend(date) && !AttendanceUtil.ifWeekendWork(date)){
                             schedulingBo.set("DAY"+j,AttendanceUtil.WEEKENDDAY);
                         }else {
                             schedulingBo.set("DAY"+j,category);

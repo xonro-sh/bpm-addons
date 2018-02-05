@@ -3,8 +3,10 @@ package com.xonro.ehr.util;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 日期公共类
@@ -55,5 +57,32 @@ public class DateUtil {
             return true;
         }
         return false;
+    }
+
+    /**
+     * 获取两个日期之间的所有日期
+     * @param minDate
+     * @param maxDate
+     * @return
+     * @throws ParseException
+     */
+    public static List<String> getDateBetweenDateStr(String minDate, String maxDate) throws ParseException{
+        List<String> listDate = new ArrayList<String>();
+        Calendar startCalendar = Calendar.getInstance();
+        Calendar endCalendar = Calendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Date startDate = df.parse(minDate);
+        startCalendar.setTime(startDate);
+        Date endDate = df.parse(maxDate);
+        endCalendar.setTime(endDate);
+        while(true){
+            startCalendar.add(Calendar.DAY_OF_MONTH, 1);
+            if(startCalendar.getTimeInMillis() < endCalendar.getTimeInMillis()){
+                listDate.add(df.format(startCalendar.getTime()));
+            }else{
+                break;
+            }
+        }
+        return listDate;
     }
 }
