@@ -55,6 +55,6 @@ public class AttendanceUtil {
         if(count > 0){
             return true;
         }
-        return true;
+        return false;
     }
 }

@@ -41,6 +41,36 @@ public class DateUtil {
         String year = String.valueOf(calendar.get(Calendar.YEAR));
         return year;
     }
+    /**
+     * 获取系统月份
+     * @return
+     */
+    public static String getSysMonth() {
+        Calendar calendar = Calendar.getInstance();
+        String year = String.valueOf(calendar.get(Calendar.MONTH));
+        return year;
+    }
+    /**
+     * 获取系统日期
+     * @return
+     */
+    public static String getSysDay() {
+        Calendar calendar = Calendar.getInstance();
+        String year = String.valueOf(calendar.get(Calendar.DATE));
+        return year;
+    }
+    /**
+     * 获取下一个月.
+     * @return
+     */
+    public static String getPreMonth() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MONTH, 1);
+        SimpleDateFormat dft = new SimpleDateFormat("yyyyMM");
+        String preMonth = dft.format(calendar.getTime());
+        return preMonth;
+    }
+
 
     /**
      * 判断是日期是否为周六周日

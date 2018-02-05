@@ -68,13 +68,19 @@ public class AutoSchedulingWeb {
                 schedulingBo.set("YEAR",year);
                 schedulingBo.set("MONTH",month);
                 //获取该月天数
-                int dayNum = DateUtil.getDayNum(Integer.parseInt(year),Integer.parseInt(year));
+                int dayNum = DateUtil.getDayNum(Integer.parseInt(year),Integer.parseInt(month));
                 for(int j = 1;j <= dayNum; j++){
                     //获取日期
-                    String date = year+"-"+month+"-"+j;
+                    String date = "";
+                    if(month.length() < 2){
+                        date = year+"-0"+month+"-"+j;
+                    }else{
+                        date = year+"-"+month+"-"+j;
+                    }
                     //当前日期是假期
                     if(AttendanceUtil.ifHoliday(date)){
                         schedulingBo.set("DAY"+j,AttendanceUtil.HOLIDAY);
+                        continue;
                     }
                     //如果周末不排班
                     if(1 == 1){
@@ -121,7 +127,7 @@ public class AutoSchedulingWeb {
     public boolean validateScheduling(String userId,String year,String month){
         int count = DBSql.getInt("select count(*) count from BO_XR_HR_TC_SCHEDULE where " +
                 "USERID='"+userId+"' and YEAR='"+year+"' and MONTH='"+month+"'","count");
-        if(count >0){
+        if(count > 0){
             return false;
         }
         return true;
