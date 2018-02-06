@@ -1,6 +1,7 @@
 package com.xonro.ehr.attendance.web.server;
 
 import com.actionsoft.bpms.bo.engine.BO;
+import com.actionsoft.bpms.org.model.CompanyModel;
 import com.actionsoft.bpms.org.model.DepartmentModel;
 import com.actionsoft.bpms.org.model.UserModel;
 import com.actionsoft.bpms.server.UserContext;
@@ -31,8 +32,6 @@ public class AutoSchedulingWeb {
     public String autoScheduling(UserContext me,String bindId,String year,String month,String type,String departmentId,
                                  String userIdList,String category){
         try{
-            //获取部门信息
-            DepartmentModel department = SDK.getORGAPI().getDepartmentById(departmentId);
             //获取部门人员
             List<UserModel> userList = new ArrayList<UserModel>();
 
@@ -46,13 +45,16 @@ public class AutoSchedulingWeb {
                     userList.add(userModel);
                 }
             }
-            SDK.getORGAPI().getUsersByDepartment(departmentId);
             //排班信息List
             List<BO> schedulingList = new ArrayList<BO>();
             //遍历生成排班信息
             for (int i = 0; i < userList.size(); i++){
                 //获取单个人员
                 UserModel user = userList.get(i);
+                //获取部门信息
+                DepartmentModel department = SDK.getORGAPI().getDepartmentByUser(user.getUID());
+                //获取公司对象
+                CompanyModel companyModel = SDK.getORGAPI().getCompanyByUser(user.getUID());
                 if(!validateScheduling(user.getUID(),year,month)){
                     return "0:用户"+user.getUserName()+"的排班信息已存在,生成失败。";
                 }
@@ -61,10 +63,10 @@ public class AutoSchedulingWeb {
                 schedulingBo.set("USERID",user.getUID());
                 schedulingBo.set("USERNAME",user.getUserName());
                 schedulingBo.set("DEPARTMENTNAME",department.getName());
-                schedulingBo.set("DEPARTMENTID",departmentId);
-                schedulingBo.set("POSITIONNAME","");
-                schedulingBo.set("COMPANYNAME","");
-                schedulingBo.set("COMPANYID","");
+                schedulingBo.set("DEPARTMENTID",department.getId());
+                schedulingBo.set("POSITIONNAME",user.getPositionName());
+                schedulingBo.set("COMPANYNAME",companyModel.getName());
+                schedulingBo.set("COMPANYID",companyModel.getId());
                 schedulingBo.set("YEAR",year);
                 schedulingBo.set("MONTH",month);
                 //获取该月天数
@@ -102,13 +104,6 @@ public class AutoSchedulingWeb {
             SDK.getBOAPI().removeByBindId("BO_XR_HR_TC_SCHEDULE",bindId);
             //将排班信息插入子表
             SDK.getBOAPI().create("BO_XR_HR_TC_SCHEDULE",schedulingList,bindId,me.getUID());
-            //获取当月节假日期
-//            List<BO> holidayDate = AttendanceUtil.getHolidayDate(year,month);
-//            for (int i = 0; i < holidayDate.size(); i++){
-//                BO holiday = holidayDate.get(i);
-//                String date = holiday.getString("HOLIDAYDATE");
-//                SDK.getBOAPI().updateByBindId("BO_XR_HR_TC_SCHEDULE",bindId,"DAY"+date,AttendanceUtil.HOLIDAY);
-//            }
         }catch (Exception e){
             e.printStackTrace();
         }finally {

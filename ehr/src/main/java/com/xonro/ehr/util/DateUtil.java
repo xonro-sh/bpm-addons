@@ -17,6 +17,16 @@ public class DateUtil {
 
     /**
      * 获取某年某月的天数
+     * @param date
+     * @return
+     */
+    public static Date formatDateString(String date) throws ParseException {
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date bdate = format.parse(date);
+        return bdate;
+    }
+    /**
+     * 获取某年某月的天数
      * @param year
      * @param month
      * @return
